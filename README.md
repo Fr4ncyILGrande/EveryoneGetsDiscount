@@ -4,7 +4,7 @@
 
 In vanilla Minecraft, curing a zombie villager rewards only the player who did the curing. On a multiplayer server, that means one person gets cure discounts while everyone else pays full price, even if they helped set up the trap, supplied the golden apple, or simply happen to share the trading hall.
 
-EveryoneGetsDiscount fixes that. When any zombie villager is cured, every other player currently online receives the same vanilla cure gossip values on that villager automatically, with no commands, no setup, and no interference with any other game mechanic. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the rest of the online server.
+**EveryoneGetsDiscount fixes that**. When any zombie villager is cured, every other player currently online receives the same vanilla cure gossip values on that villager automatically, with no commands, no setup, and no interference with any other game mechanic. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the rest of the online server.
 
 ## How It Works
 
@@ -17,13 +17,13 @@ Both values are taken directly from vanilla's own gossip system. No artificial p
 
 ## Features
 
-1. Vanilla-accurate values - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
-2. No configuration needed - install and forget; there are no commands, config files, or permissions to manage.
-3. No proximity requirement - players receive the discount regardless of which world or dimension they are in; being online is enough.
-4. Only the cured villager is affected - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
-5. Respects cancellation - if another plugin cancels the cure transformation, no discount is applied.
-6. Players offline during the cure miss out - the discount is distributed at the exact moment of transformation; late joiners are not included.
-7. Lightweight - a single event listener with no persistent state, no database, no scheduler.
+1. **Vanilla-accurate values** - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
+2. **No configuration needed** - install and forget; there are no commands, config files, or permissions to manage.
+3. **No proximity requirement** - players receive the discount regardless of which world or dimension they are in; being online is enough.
+4. **Only the cured villager is affected** - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
+5. **Respects cancellation** - if another plugin cancels the cure transformation, no discount is applied.
+6. **Players offline during the cure miss out** - the discount is distributed at the exact moment of transformation; late joiners are not included.
+7. **Lightweight** - a single event listener with no persistent state, no database, no scheduler.
 
 The plugin does not touch trade prices, merchant recipes, or any economy plugin's data. It only interacts with the villager gossip system, the same way vanilla does.
 
@@ -43,29 +43,6 @@ No. The shared discount does not stack extra reductions from repeated cures. The
 
 **Does it work with other economy or trading plugins?**  
 The plugin only writes to the vanilla villager gossip system. Whether other plugins read that data or replace it entirely with their own pricing is up to those plugins.
-
-## Building
-
-You can build the plugin locally with:
-
-```bash
-gradle build
-```
-
-The compiled plugin jar will be created in:
-
-```text
-build/libs/
-```
-
-If you do not want to build it locally, GitHub can build it for you:
-
-1. Create a new GitHub repository.
-2. Upload all files from this project folder into the repository.
-3. Open the repository's **Actions** tab.
-4. Select the latest **Build** run.
-5. Download the `EveryoneGetsDiscount` artifact.
-6. Use the `.jar` file inside that artifact on your server or on Modrinth.
 
 <p align="center">
   <a href="https://discord.gg/Zn5d9d2pBU" target="_blank">
