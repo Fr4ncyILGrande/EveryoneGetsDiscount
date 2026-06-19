@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "io.github.fr4ncyilgrande"
-version = "1.1.1"
+version = "1.0.0"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
