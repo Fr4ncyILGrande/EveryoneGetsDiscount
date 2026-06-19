@@ -15,12 +15,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew clean build
+    - name: Install Maven
+      run: sudo apt-get update && sudo apt-get install -y maven
+    - name: Build with Maven
+      run: mvn clean package
     - name: Upload JAR
       uses: actions/upload-artifact@v4
       with:
         name: my-app-jar
-        path: build/libs/*.jar
+        path: target/*.jar
