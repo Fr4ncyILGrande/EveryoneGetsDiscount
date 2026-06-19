@@ -1,3 +1,5 @@
+![Group trading with villagers](https://cdn.modrinth.com/data/cached_images/4fde5d9f877844a8d51796d085d45dbae977ea31.jpeg)
+
 # EveryoneGetsDiscount
 
 In vanilla Minecraft, curing a zombie villager rewards only the player who did the curing. On a multiplayer server, that means one person gets cure discounts while everyone else pays full price, even if they helped set up the trap, supplied the golden apple, or simply happen to share the trading hall.
@@ -15,13 +17,13 @@ Both values are taken directly from vanilla's own gossip system. No artificial p
 
 ## Features
 
-- Vanilla-accurate values - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
-- No configuration needed - install and forget; there are no commands, config files, or permissions to manage.
-- No proximity requirement - players receive the discount regardless of which world or dimension they are in; being online is enough.
-- Only the cured villager is affected - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
-- Respects cancellation - if another plugin cancels the cure transformation, no discount is applied.
-- Players offline during the cure miss out - the discount is distributed at the exact moment of transformation; late joiners are not included.
-- Lightweight - a single event listener with no persistent state, no database, no scheduler.
+1. Vanilla-accurate values - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
+2. No configuration needed - install and forget; there are no commands, config files, or permissions to manage.
+3. No proximity requirement - players receive the discount regardless of which world or dimension they are in; being online is enough.
+4. Only the cured villager is affected - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
+5. Respects cancellation - if another plugin cancels the cure transformation, no discount is applied.
+6. Players offline during the cure miss out - the discount is distributed at the exact moment of transformation; late joiners are not included.
+7. Lightweight - a single event listener with no persistent state, no database, no scheduler.
 
 The plugin does not touch trade prices, merchant recipes, or any economy plugin's data. It only interacts with the villager gossip system, the same way vanilla does.
 
@@ -64,3 +66,12 @@ If you do not want to build it locally, GitHub can build it for you:
 4. Select the latest **Build** run.
 5. Download the `EveryoneGetsDiscount` artifact.
 6. Use the `.jar` file inside that artifact on your server or on Modrinth.
+
+<p align="center">
+  <a href="https://discord.gg/Zn5d9d2pBU" target="_blank">
+    <img src="https://i.ibb.co/8Dh71sx0/Discord-logo.png" alt="Discord" width="300">
+  </a>
+</p>
+<p align="center">
+  <em>Join the Discord if you have any questions or need support!</em>
+</p>
