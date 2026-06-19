@@ -15,8 +15,7 @@ java {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    // 👇 RIMUOVI QUESTA RIGA (non serve più)
-    // options.release.set(21)
+   
 }
 
 tasks.processResources {
