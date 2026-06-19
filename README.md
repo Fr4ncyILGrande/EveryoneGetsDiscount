@@ -1,3 +1,5 @@
+![Group trading with villagers](https://cdn.modrinth.com/data/cached_images/4fde5d9f877844a8d51796d085d45dbae977ea31.jpeg)
+
 # EveryoneGetsDiscount
 
 In vanilla Minecraft, curing a zombie villager rewards only the player who did the curing. On a multiplayer server, that means one person gets cure discounts while everyone else pays full price – even if they helped set up the trap, supplied the golden apple, or simply happen to share the trading hall.
