@@ -43,3 +43,12 @@ No. The shared discount does not stack extra reductions from repeated cures. The
 
 **Does it work with other economy or trading plugins?**  
 The plugin only writes to the vanilla villager gossip system. Whether other plugins read that data or replace it entirely with their own pricing is up to those plugins.
+
+<p align="center">
+  <a href="https://discord.gg/Zn5d9d2pBU" target="_blank">
+    <img src="https://i.ibb.co/8Dh71sx0/Discord-logo.png" alt="Discord" width="300">
+  </a>
+</p>
+<p align="center">
+  <em>Join the Discord if you have any questions or need support!</em>
+</p>
