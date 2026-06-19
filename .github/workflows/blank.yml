@@ -8,13 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: gradle:8.10-jdk25
+    container: eclipse-temurin:25-jdk
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build with Gradle
-        run: gradle clean build
+      - name: Make Gradle Wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew clean build
 
       - name: Upload JAR
         uses: actions/upload-artifact@v5
