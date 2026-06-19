@@ -8,14 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: eclipse-temurin:25-jdk
+    
     steps:
     - uses: actions/checkout@v5
 
-    - name: Set up JDK 25 (Early Access)
-      uses: actions/setup-java@v5
-      with:
-        java-version: '25-ea'  # Early Access di Java 25
-        distribution: 'temurin'
+    - name: Check Java version
+      run: java -version
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
