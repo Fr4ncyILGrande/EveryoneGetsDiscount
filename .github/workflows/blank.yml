@@ -8,19 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: eclipse-temurin:25-jdk
+    container: gradle:8.10-jdk25
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Verify Java version
-        run: java -version
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build with Gradle (forced Java 25)
-        run: gradle clean build -Dorg.gradle.java.home=$JAVA_HOME
+      - name: Build with Gradle
+        run: gradle clean build
 
       - name: Upload JAR
         uses: actions/upload-artifact@v5
