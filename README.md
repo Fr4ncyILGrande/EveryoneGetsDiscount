@@ -30,7 +30,7 @@ The plugin does not touch trade prices, merchant recipes, or any economy plugin'
 ## FAQ
 
 **Do players need to be near the villager to get the discount?**  
-No. Any player who is online at the moment of the cure receives the shared discount, regardless of where they are in the server. The curing player receives Minecraft's normal vanilla cure discount.
+No. Any player who is online at the moment of the cure receives the shared discount, regardless of where they are in the server.
 
 **Does the discount last forever?**  
 The main component (`MAJOR_POSITIVE`) is permanent and matches vanilla exactly. One cure already brings it to its maximum value. A secondary bonus (`MINOR_POSITIVE`) fades over roughly 8 real-world hours, after which the permanent discount remains.
