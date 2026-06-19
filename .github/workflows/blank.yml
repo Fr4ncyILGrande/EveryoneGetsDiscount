@@ -8,16 +8,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: eclipse-temurin:25-jdk
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Make Gradle Wrapper executable
-        run: chmod +x gradlew
+      - name: Install Java 25 (Early Access)
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25-ea'
+          distribution: 'temurin'
 
-      - name: Build with Gradle Wrapper
-        run: ./gradlew clean build
+      - name: Verify Java version
+        run: java -version
+
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build with Gradle
+        run: gradle clean build
 
       - name: Upload JAR
         uses: actions/upload-artifact@v5
