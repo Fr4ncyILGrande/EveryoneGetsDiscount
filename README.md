@@ -11,6 +11,7 @@ In vanilla Minecraft, curing a zombie villager rewards only the player who did t
 The plugin listens for the moment a zombie villager finishes transforming back into a villager. At that point, Minecraft applies its normal cure gossip to the curing player, and the plugin applies the same two vanilla gossip entries to the other online players:
 
 • `MAJOR_POSITIVE (+20)` - the main cure discount. Permanent, never decays, maxes out after a single cure. This is the bulk of the trading discount and stays on that villager forever.
+
 • `MINOR_POSITIVE (+25)` - a secondary bonus, identical to the one vanilla applies. Fades at a rate of 1 point every 20 real-world minutes, disappearing completely after roughly 8 hours.
 
 Both values are taken directly from vanilla's own gossip system. No artificial price reductions, no multiplier changes - just the standard cure discount, shared. Final trade prices may still differ between players if they already had different reputation with that villager before the cure.
