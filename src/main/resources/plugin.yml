@@ -1,5 +1,5 @@
 name: EveryoneGetsDiscount
-version: 1.0.1
+version: ${version}
 main: io.github.fr4ncyilgrande.everyonegetsdiscount.EveryoneGetsDiscount
 api-version: "26.1.2"
 load: POSTWORLD
