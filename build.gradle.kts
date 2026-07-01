@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "io.github.fr4ncyilgrande"
-version = "1.0.0"
+version = "1.0.1"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
@@ -14,7 +14,8 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8" 
+    options.encoding = "UTF-8"
+    options.release.set(21)
 }
 
 tasks.processResources {

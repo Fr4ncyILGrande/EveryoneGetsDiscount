@@ -2,6 +2,7 @@ package io.github.fr4ncyilgrande.everyonegetsdiscount;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
@@ -9,8 +10,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTransformEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -21,12 +25,15 @@ public final class CureListener implements Listener {
 
     private static final int MAJOR_POSITIVE_SINGLE_CURE_VALUE = 20;
     private static final int MINOR_POSITIVE_SINGLE_CURE_VALUE = 25;
+    private static final long REPUTATION_APPLY_DELAY_TICKS = 5L;
 
+    private final Plugin plugin;
     private final Logger logger;
     private boolean warnedMissingReputationApi;
 
-    public CureListener(Logger logger) {
-        this.logger = logger;
+    public CureListener(Plugin plugin) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -43,7 +50,9 @@ public final class CureListener implements Listener {
             return;
         }
 
+        UUID villagerId = villager.getUniqueId();
         UUID curingPlayerId = getCuringPlayerId(zombieVillager);
+        List<UUID> sharedPlayerIds = new ArrayList<>();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID playerId = player.getUniqueId();
@@ -51,6 +60,27 @@ public final class CureListener implements Listener {
                 continue;
             }
 
+            sharedPlayerIds.add(playerId);
+        }
+
+        if (sharedPlayerIds.isEmpty()) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskLater(
+                plugin,
+                () -> applySharedDiscounts(villagerId, sharedPlayerIds),
+                REPUTATION_APPLY_DELAY_TICKS
+        );
+    }
+
+    private void applySharedDiscounts(UUID villagerId, List<UUID> sharedPlayerIds) {
+        Entity entity = Bukkit.getEntity(villagerId);
+        if (!(entity instanceof Villager villager) || !villager.isValid()) {
+            return;
+        }
+
+        for (UUID playerId : sharedPlayerIds) {
             if (!applySharedCureReputation(villager, playerId)) {
                 warnMissingReputationApi();
                 return;
@@ -64,7 +94,7 @@ public final class CureListener implements Listener {
     }
 
     private static boolean applySharedCureReputation(Villager villager, UUID playerId) {
-        return applySpigotReputation(villager, playerId) || applyPaperReputation(villager, playerId);
+        return applyPaperReputation(villager, playerId) || applySpigotReputation(villager, playerId);
     }
 
     private static boolean applySpigotReputation(Villager villager, UUID playerId) {

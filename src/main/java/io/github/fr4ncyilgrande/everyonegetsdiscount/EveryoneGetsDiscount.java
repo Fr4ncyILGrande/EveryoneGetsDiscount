@@ -6,7 +6,7 @@ public final class EveryoneGetsDiscount extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(new CureListener(getLogger()), this);
+        getServer().getPluginManager().registerEvents(new CureListener(this), this);
         getLogger().info("EveryoneGetsDiscount enabled.");
     }
 
