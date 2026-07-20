@@ -19,16 +19,18 @@ jobs:
           distribution: 'temurin'
 
       - name: Verify Java version
-        run: java -version
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
 
       - name: Install Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
-        run: gradle clean build
+      - name: Build with Gradle (forced Java 25)
+        run: gradle clean build -Dorg.gradle.java.home=$JAVA_HOME
 
       - name: Upload JAR
         uses: actions/upload-artifact@v5
         with:
-          name: EveryoneGetsDiscount
+          name: my-app-jar
           path: build/libs/*.jar
