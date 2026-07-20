@@ -1,0 +1,5 @@
+# Shared discount radius.
+#
+# -1: share the cure discount with all online players.
+#  0 or higher: share only with online players in the same world within this many blocks of the cured villager.
+share-radius: -1

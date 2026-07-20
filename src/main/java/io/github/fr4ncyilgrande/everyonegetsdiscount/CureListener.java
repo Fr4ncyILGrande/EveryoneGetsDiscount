@@ -1,6 +1,7 @@
 package io.github.fr4ncyilgrande.everyonegetsdiscount;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -10,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTransformEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,11 +27,11 @@ public final class CureListener implements Listener {
     private static final int MINOR_POSITIVE_SINGLE_CURE_VALUE = 25;
     private static final long REPUTATION_APPLY_DELAY_TICKS = 5L;
 
-    private final Plugin plugin;
+    private final EveryoneGetsDiscount plugin;
     private final Logger logger;
     private boolean warnedMissingReputationApi;
 
-    public CureListener(Plugin plugin) {
+    public CureListener(EveryoneGetsDiscount plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
     }
@@ -51,16 +51,17 @@ public final class CureListener implements Listener {
         }
 
         UUID villagerId = villager.getUniqueId();
+        Location villagerLocation = villager.getLocation();
         UUID curingPlayerId = getCuringPlayerId(zombieVillager);
+        double shareRadius = plugin.getShareRadius();
         List<UUID> sharedPlayerIds = new ArrayList<>();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            UUID playerId = player.getUniqueId();
-            if (curingPlayerId != null && curingPlayerId.equals(playerId)) {
+            if (!shouldReceiveSharedDiscount(player, curingPlayerId, villagerLocation, shareRadius)) {
                 continue;
             }
 
-            sharedPlayerIds.add(playerId);
+            sharedPlayerIds.add(player.getUniqueId());
         }
 
         if (sharedPlayerIds.isEmpty()) {
@@ -91,6 +92,28 @@ public final class CureListener implements Listener {
     private static UUID getCuringPlayerId(ZombieVillager zombieVillager) {
         OfflinePlayer curingPlayer = zombieVillager.getConversionPlayer();
         return curingPlayer == null ? null : curingPlayer.getUniqueId();
+    }
+
+    private static boolean shouldReceiveSharedDiscount(
+            Player player,
+            UUID curingPlayerId,
+            Location villagerLocation,
+            double shareRadius
+    ) {
+        if (curingPlayerId != null && curingPlayerId.equals(player.getUniqueId())) {
+            return false;
+        }
+
+        if (shareRadius < 0.0D) {
+            return true;
+        }
+
+        if (!player.getWorld().equals(villagerLocation.getWorld())) {
+            return false;
+        }
+
+        double maxDistanceSquared = shareRadius * shareRadius;
+        return player.getLocation().distanceSquared(villagerLocation) <= maxDistanceSquared;
     }
 
     private static boolean applySharedCureReputation(Villager villager, UUID playerId) {
