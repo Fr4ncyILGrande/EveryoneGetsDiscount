@@ -4,7 +4,7 @@
 
 In vanilla Minecraft, curing a zombie villager rewards only the player who did the curing. On a multiplayer server, that means one person gets cure discounts while everyone else pays full price, even if they helped set up the trap, supplied the golden apple, or simply happen to share the trading hall.
 
-EveryoneGetsDiscount fixes that. When any zombie villager is cured, eligible online players receive the same vanilla cure gossip values on that villager automatically, with no interference with any other game mechanic. By default, every online player is eligible. Server admins can also limit sharing to players within a configurable block radius around the cured villager. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the selected online players.
+**EveryoneGetsDiscount fixes that**. When any zombie villager is cured, eligible online players receive the same vanilla cure gossip values on that villager automatically, with no interference with any other game mechanic. By default, every online player is eligible. Server admins can also limit sharing to players within a configurable block radius around the cured villager. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the selected online players.
 
 ## How It Works
 
@@ -17,15 +17,15 @@ Both values are taken directly from vanilla's own gossip system. No artificial p
 
 ## Features
 
-1. Vanilla-accurate values - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
-2. Works out of the box - the default radius is `-1`, which shares discounts with all online players.
-3. Optional radius limit - admins can use `/egd radius <blocks>` to share only with online players within that many blocks of the cured villager.
-4. Optional no-proximity mode - `/egd radius -1` restores the default behavior where being online is enough.
-5. Only the cured villager is affected - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
-6. Respects cancellation - if another plugin cancels the cure transformation, no discount is applied.
-7. Players offline during the cure miss out - eligible players are selected at the exact moment of transformation; late joiners are not included.
-8. Safe timing - the plugin captures eligible players during the cure event, then applies the shared reputation 5 ticks later to the finalized villager entity.
-9. Lightweight - no database and no recurring background tasks.
+1. **Vanilla-accurate values** - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
+2. **Works out of the box** - the default radius is `-1`, which shares discounts with all online players.
+3. **Optional radius limit** - admins can use `/egd radius <blocks>` to share only with online players within that many blocks of the cured villager.
+4. **Optional no-proximity mode** - `/egd radius -1` restores the default behavior where being online is enough.
+5. **Only the cured villager is affected** - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
+6. **Respects cancellation** - if another plugin cancels the cure transformation, no discount is applied.
+7. **Players offline during the cure miss out** - eligible players are selected at the exact moment of transformation; late joiners are not included.
+8. **Safe timing** - the plugin captures eligible players during the cure event, then applies the shared reputation 5 ticks later to the finalized villager entity.
+9. **Lightweight** - no database and no recurring background tasks.
 
 The plugin does not touch trade prices, merchant recipes, or any economy plugin's data. It only interacts with the villager gossip system, the same way vanilla does.
 
