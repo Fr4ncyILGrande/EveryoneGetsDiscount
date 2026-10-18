@@ -22,41 +22,44 @@ public final class RadiusCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage("You do not have permission to use this command.");
+            sendError(sender, "You do not have permission to use this command.");
             return true;
         }
 
         if (args.length == 0) {
-            sendUsage(sender, label);
+            sendHelp(sender, label);
             return true;
         }
 
         String subCommand = args[0].toLowerCase(Locale.ROOT);
-        if (subCommand.equals("radius")) {
-            handleRadius(sender, label, args);
-            return true;
+        switch (subCommand) {
+            case "help" -> sendHelp(sender, label);
+            case "radius" -> handleRadius(sender, label, args);
+            case "reload" -> handleReload(sender, label, args);
+            default -> {
+                sendError(sender, "Unknown subcommand: " + args[0] + ".");
+                sendHelp(sender, label);
+            }
         }
-
-        if (subCommand.equals("reload")) {
-            plugin.reloadConfig();
-            plugin.reloadShareRadius();
-            sender.sendMessage("EveryoneGetsDiscount config reloaded. Current radius: " + formatRadius(plugin.getShareRadius()) + ".");
-            return true;
-        }
-
-        sendUsage(sender, label);
         return true;
     }
 
     private void handleRadius(CommandSender sender, String label, String[] args) {
         if (args.length == 1) {
-            sender.sendMessage("Current shared discount radius: " + formatRadius(plugin.getShareRadius()) + ".");
-            sender.sendMessage("Use /" + label + " radius -1 for all online players, or /" + label + " radius <blocks>.");
+            sendInfo(sender, "Current sharing mode: ", formatRadius(plugin.getShareRadius()));
+            CommandMessage.message()
+                    .gray("Use ")
+                    .yellow(command(label, "radius -1"))
+                    .gray(" for all online players, or ")
+                    .yellow(command(label, "radius <blocks>"))
+                    .gray(" for distance mode.")
+                    .sendTo(sender);
             return;
         }
 
         if (args.length != 2) {
-            sendUsage(sender, label);
+            sendError(sender, "Too many arguments for the radius command.");
+            sendUsage(sender, command(label, "radius <blocks|-1>"));
             return;
         }
 
@@ -64,37 +67,88 @@ public final class RadiusCommand implements CommandExecutor, TabCompleter {
         try {
             radius = Double.parseDouble(args[1]);
         } catch (NumberFormatException exception) {
-            sender.sendMessage("Invalid radius. Use -1, 0, or a positive number.");
+            sendError(sender, "Invalid radius: " + args[1] + ". Use -1, 0, or a positive number.");
             return;
         }
 
-        if (!Double.isFinite(radius) || (radius != -1.0D && radius < 0.0D)) {
-            sender.sendMessage("Invalid radius. Use -1 for all online players, or 0 / a positive number for distance mode.");
+        if (!ShareRadiusPolicy.isValid(radius)) {
+            sendError(sender, "Invalid radius: " + args[1]
+                    + ". Use -1 for all online players, or a finite number of 0 or greater.");
             return;
         }
 
         plugin.setShareRadius(radius);
-        sender.sendMessage("Shared discount radius set to " + formatRadius(radius) + ".");
+        sendSuccess(sender, "Sharing mode updated: ", formatRadius(radius));
     }
 
-    private static void sendUsage(CommandSender sender, String label) {
-        sender.sendMessage("EveryoneGetsDiscount commands:");
-        sender.sendMessage("/" + label + " radius - show the current radius");
-        sender.sendMessage("/" + label + " radius -1 - share with all online players");
-        sender.sendMessage("/" + label + " radius <blocks> - share only with online players within that distance");
-        sender.sendMessage("/" + label + " reload - reload config.yml");
+    private void handleReload(CommandSender sender, String label, String[] args) {
+        if (args.length != 1) {
+            sendError(sender, "The reload command does not accept additional arguments.");
+            sendUsage(sender, command(label, "reload"));
+            return;
+        }
+
+        plugin.reloadConfig();
+        plugin.reloadShareRadius();
+        sendSuccess(sender, "Configuration reloaded. Current mode: ", formatRadius(plugin.getShareRadius()));
     }
 
-    private static String formatRadius(double radius) {
+    private void sendHelp(CommandSender sender, String label) {
+        CommandMessage.message()
+                .darkAqua("---------------- ")
+                .aquaBold("EveryoneGetsDiscount")
+                .darkAqua(" ----------------")
+                .sendTo(sender);
+        sendInfo(sender, "Current sharing mode: ", formatRadius(plugin.getShareRadius()));
+        sendHelpEntry(sender, command(label, "radius"), "Show the current sharing mode");
+        sendHelpEntry(sender, command(label, "radius -1"), "Share with all online players");
+        sendHelpEntry(sender, command(label, "radius <blocks>"), "Limit sharing to players within range");
+        sendHelpEntry(sender, command(label, "reload"), "Reload config.yml");
+        CommandMessage.message().darkGray("Permission: ").gray(PERMISSION).sendTo(sender);
+    }
+
+    static String formatRadius(double radius) {
         if (radius < 0.0D) {
-            return "-1 (all online players)";
+            return "all online players (-1)";
         }
 
         if (radius == Math.rint(radius)) {
-            return Long.toString(Math.round(radius)) + " blocks";
+            return "players within " + Math.round(radius) + " blocks";
         }
 
-        return String.format(Locale.ROOT, "%.2f blocks", radius);
+        return String.format(Locale.ROOT, "players within %.2f blocks", radius);
+    }
+
+    private static String command(String label, String arguments) {
+        return "/" + label + " " + arguments;
+    }
+
+    private static void sendHelpEntry(CommandSender sender, String command, String description) {
+        CommandMessage.message()
+                .yellow(command)
+                .darkGray(" - ")
+                .gray(description)
+                .sendTo(sender);
+    }
+
+    private static void sendUsage(CommandSender sender, String command) {
+        CommandMessage.message().gray("Usage: ").yellow(command).sendTo(sender);
+    }
+
+    private static void sendInfo(CommandSender sender, String message, String value) {
+        prefixed().gray(message).yellow(value).gray(".").sendTo(sender);
+    }
+
+    private static void sendSuccess(CommandSender sender, String message, String value) {
+        prefixed().green(message).yellow(value).green(".").sendTo(sender);
+    }
+
+    private static void sendError(CommandSender sender, String message) {
+        prefixed().red(message).sendTo(sender);
+    }
+
+    private static CommandMessage prefixed() {
+        return CommandMessage.message().darkAqua("[").aqua("EGD").darkAqua("] ");
     }
 
     @Override
@@ -105,6 +159,7 @@ public final class RadiusCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
+            addIfStartsWith(suggestions, "help", args[0]);
             addIfStartsWith(suggestions, "radius", args[0]);
             addIfStartsWith(suggestions, "reload", args[0]);
             return suggestions;

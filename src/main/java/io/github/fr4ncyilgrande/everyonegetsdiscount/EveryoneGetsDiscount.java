@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public final class EveryoneGetsDiscount extends JavaPlugin {
 
-    private static final double DEFAULT_SHARE_RADIUS = -1.0D;
+    private static final double DEFAULT_SHARE_RADIUS = ShareRadiusPolicy.ALL_ONLINE;
 
     private double shareRadius = DEFAULT_SHARE_RADIUS;
 
@@ -37,6 +37,10 @@ public final class EveryoneGetsDiscount extends JavaPlugin {
     }
 
     public void setShareRadius(double shareRadius) {
+        if (!ShareRadiusPolicy.isValid(shareRadius)) {
+            throw new IllegalArgumentException("Invalid share radius: " + shareRadius);
+        }
+
         this.shareRadius = shareRadius;
         getConfig().set("share-radius", shareRadius);
         saveConfig();
@@ -72,6 +76,6 @@ public final class EveryoneGetsDiscount extends JavaPlugin {
     }
 
     private static boolean isValidShareRadius(double shareRadius) {
-        return Double.isFinite(shareRadius) && (shareRadius == DEFAULT_SHARE_RADIUS || shareRadius >= 0.0D);
+        return ShareRadiusPolicy.isValid(shareRadius);
     }
 }

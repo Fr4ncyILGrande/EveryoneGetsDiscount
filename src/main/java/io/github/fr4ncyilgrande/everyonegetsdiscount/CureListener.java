@@ -36,7 +36,7 @@ public final class CureListener implements Listener {
         this.logger = plugin.getLogger();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onVillagerCured(EntityTransformEvent event) {
         if (event.getTransformReason() != EntityTransformEvent.TransformReason.CURED) {
             return;
@@ -68,9 +68,10 @@ public final class CureListener implements Listener {
             return;
         }
 
+        List<UUID> recipients = List.copyOf(sharedPlayerIds);
         Bukkit.getScheduler().runTaskLater(
                 plugin,
-                () -> applySharedDiscounts(villagerId, sharedPlayerIds),
+                () -> applySharedDiscounts(villagerId, recipients),
                 REPUTATION_APPLY_DELAY_TICKS
         );
     }
@@ -100,20 +101,18 @@ public final class CureListener implements Listener {
             Location villagerLocation,
             double shareRadius
     ) {
-        if (curingPlayerId != null && curingPlayerId.equals(player.getUniqueId())) {
-            return false;
-        }
+        boolean sameWorld = player.getWorld().equals(villagerLocation.getWorld());
+        double distanceSquared = sameWorld
+                ? player.getLocation().distanceSquared(villagerLocation)
+                : Double.POSITIVE_INFINITY;
 
-        if (shareRadius < 0.0D) {
-            return true;
-        }
-
-        if (!player.getWorld().equals(villagerLocation.getWorld())) {
-            return false;
-        }
-
-        double maxDistanceSquared = shareRadius * shareRadius;
-        return player.getLocation().distanceSquared(villagerLocation) <= maxDistanceSquared;
+        return ShareRadiusPolicy.shouldShare(
+                player.getUniqueId(),
+                curingPlayerId,
+                sameWorld,
+                distanceSquared,
+                shareRadius
+        );
     }
 
     private static boolean applySharedCureReputation(Villager villager, UUID playerId) {
@@ -162,8 +161,9 @@ public final class CureListener implements Listener {
             int minimumValue
     ) throws ReflectiveOperationException {
         int currentValue = ((Number) getReputation.invoke(villager, playerId, reputationType)).intValue();
-        int newValue = Math.max(currentValue, minimumValue);
-        setReputation.invoke(villager, playerId, reputationType, newValue);
+        if (currentValue < minimumValue) {
+            setReputation.invoke(villager, playerId, reputationType, minimumValue);
+        }
     }
 
     private static boolean applyPaperReputation(Villager villager, UUID playerId) {
@@ -185,14 +185,14 @@ public final class CureListener implements Listener {
             Object majorPositive = reputationTypeClass.getField(MAJOR_POSITIVE).get(null);
             Object minorPositive = reputationTypeClass.getField(MINOR_POSITIVE).get(null);
 
-            setPaperReputationAtLeast(
+            boolean changed = setPaperReputationAtLeast(
                     reputation,
                     getReputationValue,
                     setReputationValue,
                     majorPositive,
                     MAJOR_POSITIVE_SINGLE_CURE_VALUE
             );
-            setPaperReputationAtLeast(
+            changed |= setPaperReputationAtLeast(
                     reputation,
                     getReputationValue,
                     setReputationValue,
@@ -200,14 +200,16 @@ public final class CureListener implements Listener {
                     MINOR_POSITIVE_SINGLE_CURE_VALUE
             );
 
-            setVillagerReputation.invoke(villager, playerId, reputation);
+            if (changed) {
+                setVillagerReputation.invoke(villager, playerId, reputation);
+            }
             return true;
         } catch (Exception | LinkageError ignored) {
             return false;
         }
     }
 
-    private static void setPaperReputationAtLeast(
+    private static boolean setPaperReputationAtLeast(
             Object reputation,
             Method getReputationValue,
             Method setReputationValue,
@@ -215,8 +217,12 @@ public final class CureListener implements Listener {
             int minimumValue
     ) throws ReflectiveOperationException {
         int currentValue = ((Number) getReputationValue.invoke(reputation, reputationType)).intValue();
-        int newValue = Math.max(currentValue, minimumValue);
-        setReputationValue.invoke(reputation, reputationType, newValue);
+        if (currentValue >= minimumValue) {
+            return false;
+        }
+
+        setReputationValue.invoke(reputation, reputationType, minimumValue);
+        return true;
     }
 
     private void warnMissingReputationApi() {
