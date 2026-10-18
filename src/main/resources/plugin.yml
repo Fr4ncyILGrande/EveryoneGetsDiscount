@@ -3,7 +3,7 @@ version: ${version}
 main: io.github.fr4ncyilgrande.everyonegetsdiscount.EveryoneGetsDiscount
 api-version: "26.1.2"
 load: POSTWORLD
-description: Condivide gli sconti da cura del villager zombificato con i giocatori online
+description: Shares zombie villager curing discounts with online players.
 author: Fr4ncyILGrande
 commands:
   everyonegetsdiscount:
