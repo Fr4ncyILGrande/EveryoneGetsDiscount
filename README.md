@@ -1,44 +1,40 @@
+![Group trading with villagers](https://cdn.modrinth.com/data/cached_images/4fde5d9f877844a8d51796d085d45dbae977ea31.jpeg)
+
 # EveryoneGetsDiscount
 
 In vanilla Minecraft, curing a zombie villager rewards only the player who did the curing. On a multiplayer server, that means one person gets cure discounts while everyone else pays full price, even if they helped set up the trap, supplied the golden apple, or simply happen to share the trading hall.
 
-EveryoneGetsDiscount fixes that. When any zombie villager is cured, eligible online players receive the same vanilla cure gossip values on that villager automatically, with no interference with any other game mechanic. By default, every online player is eligible. Server admins can also limit sharing to players within a configurable block radius around the cured villager. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the selected online players.
+**EveryoneGetsDiscount fixes that**. When any zombie villager is cured, eligible online players receive the same vanilla cure gossip values on that villager automatically, with no interference with any other game mechanic. By default, every online player is eligible. Server admins can also limit sharing to players within a configurable block radius around the cured villager. The curing player keeps Minecraft's normal vanilla cure discount, while the plugin shares that same type of discount with the selected online players.
 
 ## How It Works
 
 The plugin listens for the moment a zombie villager finishes transforming back into a villager. At that point, Minecraft applies its normal cure gossip to the curing player, and the plugin applies the same two vanilla gossip entries to the other eligible online players:
 
-- `MAJOR_POSITIVE (+20)` - the main cure discount. Permanent, never decays, maxes out after a single cure. This is the bulk of the trading discount and stays on that villager forever.
-- `MINOR_POSITIVE (+25)` - a secondary bonus, identical to the one vanilla applies. Fades at a rate of 1 point every 20 real-world minutes, disappearing completely after roughly 8 hours.
+• `MAJOR_POSITIVE (+20)` - the main cure discount. Permanent, never decays, maxes out after a single cure. This is the bulk of the trading discount and stays on that villager forever.
+
+• `MINOR_POSITIVE (+25)` - a secondary bonus, identical to the one vanilla applies. Fades at a rate of 1 point every 20 real-world minutes, disappearing completely after roughly 8 hours.
 
 Both values are taken directly from vanilla's own gossip system. No artificial price reductions, no multiplier changes, just the standard cure discount, shared. Final trade prices may still differ between players if they already had different reputation with that villager before the cure.
 
 ## Features
 
-- Vanilla-accurate values - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
-- Works out of the box - the default radius is `-1`, which shares discounts with all online players.
-- Optional radius limit - admins can use `/egd radius <blocks>` to share only with online players within that many blocks of the cured villager.
-- Optional no-proximity mode - `/egd radius -1` restores the default behavior where being online is enough.
-- Only the cured villager is affected - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
-- Respects cancellation - if another plugin cancels the cure transformation, no discount is applied.
-- Players offline during the cure miss out - eligible players are selected at the exact moment of transformation; late joiners are not included.
-- Safe timing - the plugin captures eligible players during the cure event, then applies the shared reputation 5 ticks later to the finalized villager entity.
-- Clear admin output - `/egd` uses native MiniMessage formatting on Paper and Purpur, with an automatic Spigot-compatible fallback and no bundled messaging library.
-- Lightweight - no database and no recurring background tasks.
+1. **Vanilla-accurate values** - the plugin uses the exact same gossip types and single-cure amounts Minecraft assigns when a player cures a villager themselves.
+
+2. **Works out of the box** - the default radius is `-1`, which shares discounts with all online players.
+
+3. **Optional radius limit** - admins can use `/egd radius <blocks>` to share only with online players within that many blocks of the cured villager.
+
+4. **Optional no-proximity mode** - `/egd radius -1` restores the default behavior where being online is enough.
+
+5. **Only the cured villager is affected** - other nearby villagers are not touched by the plugin. Vanilla gossip propagation between villagers continues normally on its own.
+
+6. **Respects cancellation** - if another plugin cancels the cure transformation, no discount is applied.
+
+7. **Players offline during the cure miss out** - eligible players are selected at the exact moment of transformation; late joiners are not included.
+
+8. **Lightweight** - no database and no recurring background tasks.
 
 The plugin does not touch trade prices, merchant recipes, or any economy plugin's data. It only interacts with the villager gossip system, the same way vanilla does.
-
-## Compatibility
-
-EveryoneGetsDiscount is compiled and tested against Paper API `26.3` and is designed to run on:
-
-- Paper, Purpur, and Spigot `26.1.2`
-- Paper, Purpur, and Spigot `26.2`
-- Paper, Purpur, and Spigot `26.3`
-
-The `plugin.yml` uses `api-version: "26.1.2"` on purpose. This declares the oldest supported API, while the build itself compiles against Paper `26.3`. The plugin avoids NMS and CraftBukkit internals; Paper/Purpur-specific reputation support is accessed defensively, with a Spigot-compatible fallback.
-
-Java 25 or newer is required, matching the runtime requirement of the supported Minecraft `26.x` server line.
 
 ## FAQ
 
@@ -59,7 +55,7 @@ The plugin only writes to the vanilla villager gossip system. Whether other plug
 
 ## Commands
 
-`/egd` or `/egd help` - shows the color-coded command overview and current sharing mode.
+`/egd` or `/egd help` - shows the plugin's available commands.
 
 `/egd radius` - shows the current shared discount radius.
 
@@ -72,25 +68,12 @@ The plugin only writes to the vanilla villager gossip system. Whether other plug
 Permission: `everyonegetsdiscount.admin`  
 Default: operators only
 
-## Building
-
-You can build the plugin locally with:
-
-```bash
-gradle build
-```
-
-The compiled plugin jar will be created in:
-
-```text
-build/libs/
-```
-
-If you do not want to build it locally, GitHub can build it for you:
-
-1. Create a new GitHub repository.
-2. Upload all files from this project folder into the repository.
-3. Open the repository's **Actions** tab.
-4. Select the latest **Build** run.
-5. Download the `EveryoneGetsDiscount-2.0.1` artifact.
-6. Use the `.jar` file inside that artifact on your server or on Modrinth.
+‎
+<p align="center">
+  <a href="https://discord.gg/Zn5d9d2pBU" target="_blank">
+    <img src="https://i.ibb.co/8Dh71sx0/Discord-logo.png" alt="Discord" width="300">
+  </a>
+</p>
+<p align="center">
+  <em>Join the Discord if you have any questions or need support!</em>
+</p>
